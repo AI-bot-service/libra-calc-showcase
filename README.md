@@ -38,16 +38,57 @@
 - **Отчёт врачу**: CSV и PDF за период.
 - **Telegram-бот**: фото в чат — ответ с углеводами и ХЕ, запись в тот же дневник.
 
+
+## Как это выглядит
+
+### Фото еды
+
+Снимок тарелки — ИИ находит блюда и оценивает вес, углеводы и ХЕ считает код по справочнику.
+
 <table>
   <tr>
-    <td align="center"><img src="assets/1-photo.png" width="240" alt="Распознавание фото"></td>
-    <td align="center"><img src="assets/2-result.png" width="240" alt="Состав и уточнение"></td>
-    <td align="center"><img src="assets/3-today.png" width="240" alt="Экран «Сегодня»"></td>
+    <td align="center" width="33%"><img src="assets/photo-1.png" width="240" alt="Распознавание фото"></td>
+    <td align="center" width="33%"><img src="assets/photo-2.png" width="240" alt="Варианты блюда"></td>
+    <td align="center" width="33%"><img src="assets/photo-3.png" width="240" alt="Итог приёма"></td>
   </tr>
   <tr>
-    <td align="center"><b>1. Снимок</b><br>обычно до минуты</td>
-    <td align="center"><b>2. Состав и граммы</b><br>ИИ уточняет, если не видно соус</td>
-    <td align="center"><b>3. Дневник</b><br>сахар с датчика, ХЕ и углеводы за день</td>
+    <td align="center"><b>Снимок</b><br>шаги расчёта видны сразу</td>
+    <td align="center"><b>Что это за блюдо?</b><br>похожие варианты с БЖУ, выбор в одно касание</td>
+    <td align="center"><b>Итог</b><br>ХЕ, погрешность и кривая подъёма сахара</td>
+  </tr>
+</table>
+
+### Штрихкод
+
+Код читается с живого видео камеры. Товар из общей базы или каталога магазина — сразу с составом и фото пачки.
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="assets/barcode-1.png" width="240" alt="Сканер штрихкода"></td>
+    <td align="center" width="33%"><img src="assets/barcode-2.png" width="240" alt="Товар найден"></td>
+    <td align="center" width="33%"><img src="assets/barcode-3.png" width="240" alt="Итог по пачке"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Наведите камеру</b><br>без кнопки «снять»</td>
+    <td align="center"><b>Нашлось по штрихкоду</b><br>состав с упаковки, сверка с пачкой</td>
+    <td align="center"><b>Сколько съели</b><br>40 г — 1,1 ХЕ</td>
+  </tr>
+</table>
+
+### Своё блюдо
+
+Домашний рецепт: продукты вводятся сырыми, как клали в кастрюлю, выход блюда считается по коэффициентам или по весу кастрюли.
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="assets/dish-1.png" width="240" alt="Блюдо по рецепту"></td>
+    <td align="center" width="33%"><img src="assets/dish-2.png" width="240" alt="Карточка блюда"></td>
+    <td align="center" width="33%"><img src="assets/dish-3.png" width="240" alt="Избранное"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Рецепт</b><br>сырые продукты и выход блюда</td>
+    <td align="center"><b>Карточка</b><br>на 100 г и на всё блюдо, скорость подъёма сахара</td>
+    <td align="center"><b>Избранное</b><br>свои блюда — в одно касание</td>
   </tr>
 </table>
 
