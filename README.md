@@ -1,6 +1,10 @@
 # LibraCalc — ИИ-дневник для семей с диабетом 1 типа
 
-**Прод: [libracalc.ru](https://libracalc.ru)** (PWA и Telegram Mini App; войти можно гостем, без регистрации)
+![LibraCalc](assets/hero.jpg)
+
+**Сфотографируй тарелку — получи углеводы и ХЕ.**
+
+**[Открыть LibraCalc →](https://libracalc.ru/?src=github)** · PWA и Telegram Mini App, войти можно гостем, без регистрации
 
 Публичная витрина проекта. Основной репозиторий закрыт: в нём боевая инфраструктура,
 конфигурация провайдеров и работа с медицинскими данными пользователей. Здесь — задача,
@@ -33,6 +37,19 @@
 - **Семейный дневник**: родители ведут дневник ребёнка вместе, по приглашению.
 - **Отчёт врачу**: CSV и PDF за период.
 - **Telegram-бот**: фото в чат — ответ с углеводами и ХЕ, запись в тот же дневник.
+
+<table>
+  <tr>
+    <td align="center"><img src="assets/1-photo.png" width="240" alt="Распознавание фото"></td>
+    <td align="center"><img src="assets/2-result.png" width="240" alt="Состав и уточнение"></td>
+    <td align="center"><img src="assets/3-today.png" width="240" alt="Экран «Сегодня»"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>1. Снимок</b><br>обычно до минуты</td>
+    <td align="center"><b>2. Состав и граммы</b><br>ИИ уточняет, если не видно соус</td>
+    <td align="center"><b>3. Дневник</b><br>сахар с датчика, ХЕ и углеводы за день</td>
+  </tr>
+</table>
 
 ## Ключевые решения
 
@@ -136,14 +153,8 @@ flowchart LR
 | Инфраструктура | Docker Compose, Traefik v3, GitHub Actions (CI + gitleaks), non-root контейнеры, версии фиксируются после проверки CVE (OSV, trivy) |
 | Безопасность данных | Шифрование учётных данных датчика (Fernet), фото еды хранятся 14 дней, рантайм-роль БД без DDL |
 
-## Запуск тестов витрины
-
-```bash
-pip install -r requirements.txt
-PYTHONPATH=src pytest -q
-```
 
 ## Автор
 
-Алексей Русских — [@Rubitco1](https://t.me/Rubitco1). Продукт, архитектура, бэкенд, фронтенд,
+Алексей Русских — [@Rubitco1](https://t.me/Rubitco1) · [libracalc.ru](https://libracalc.ru/?src=github). Продукт, архитектура, бэкенд, фронтенд,
 инфраструктура. Разработка с Claude Code.
