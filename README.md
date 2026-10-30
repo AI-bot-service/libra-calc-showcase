@@ -1,201 +1,213 @@
-# LibraCalc — ИИ-дневник для семей с диабетом 1 типа
+# LibraCalc
+
+**AI food diary for families living with type 1 diabetes. Snap a plate, get carbs.**
+
+![Status](https://img.shields.io/badge/status-in%20production-2ea44f)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)
+![PWA + Telegram](https://img.shields.io/badge/PWA%20%2B%20Telegram%20Mini%20App-26A5E4?logo=telegram&logoColor=white)
 
 ![LibraCalc](assets/hero.jpg)
 
-**Сфотографируй тарелку — получи углеводы и ХЕ.**
+**[Try LibraCalc →](https://libracalc.ru/?src=github)** · PWA and Telegram Mini App · guest login, no sign-up · interface in Russian
 
-**[Открыть LibraCalc →](https://libracalc.ru/?src=github)** · PWA и Telegram Mini App, войти можно гостем, без регистрации
-
-Публичная витрина проекта. Основной репозиторий закрыт: в нём боевая инфраструктура,
-конфигурация провайдеров и работа с медицинскими данными пользователей. Здесь — задача,
-архитектура, ключевые решения и часть кода с тестами, которую можно показать.
+> Public showcase. The main repository is private: it holds the production infrastructure,
+> provider configuration and users' medical data. Here: the problem, the architecture,
+> key decisions and the part of the code that can be shown, with tests.
 
 ---
 
-## Задача
+## The problem
 
-При диабете 1 типа перед каждой едой, 4–6 раз в день, нужно посчитать углеводы и хлебные
-единицы (ХЕ): от этого зависит доза инсулина. В школе, кафе или в гостях весов нет, а
-ошибка на 20–30 г углеводов — это гипо- или гипергликемия через пару часов.
+With type 1 diabetes, carbohydrates have to be counted before every meal, 4–6 times a day:
+the insulin dose depends on it. At school, in a café or at a friend's place there are no
+scales, and a 20–30 g carb error means hypo- or hyperglycaemia a couple of hours later.
 
-Фото-счётчики калорий для этого не годятся: модель уверенно ошибается, на русской еде
-(борщ, пельмени, комплексный обед в столовой) — особенно. Человек получает число без
-диапазона и без объяснения, откуда оно.
+Photo calorie counters don't solve this. The model is confidently wrong, especially on
+Russian food (borscht, pelmeni, set lunches in a canteen). The user gets a single number
+with no range and no idea where it came from.
 
-## Что делает LibraCalc
+## What LibraCalc does
 
 ```
-открыл приложение → «Фото еды» → снимок → углеводы и ХЕ (диапазон, состав, граммы)
-                  → при необходимости правка граммов → «Сохранить» в дневник
+open the app → "Food photo" → snapshot → carbs and XE (range, components, grams)
+             → adjust grams if needed → "Save" to the diary
 ```
 
-- **Распознавание**: тарелка (одно или несколько фото), упаковка (таблица БЖУ с этикетки,
-  штрихкод), меню столовой или кафе с выходом блюд. Оценка показывается **диапазоном**,
-  человек правит граммы.
-- **Дневник**: еда, инсулин, глюкоза с датчика FreeStyle Libre через LibreLinkUp или из любой
-  программы с Nightscout-выгрузкой (xDrip+, Juggluco).
-- **Семейный дневник**: родители ведут дневник ребёнка вместе, по приглашению.
-- **Отчёт врачу**: CSV и PDF за период.
-- **Telegram-бот**: фото в чат — ответ с углеводами и ХЕ, запись в тот же дневник.
+- **Recognition**: a plate (one or several photos), a package (nutrition table from the
+  label, barcode), a canteen or café menu with portion weights. The estimate is shown
+  **as a range**, and the user adjusts the grams.
+- **Diary**: food, insulin, and glucose from a FreeStyle Libre sensor via LibreLinkUp or from
+  any app with a Nightscout upload (xDrip+, Juggluco).
+- **Family diary**: parents keep a child's diary together, by invitation.
+- **Report for the doctor**: CSV and PDF for any period.
+- **Telegram bot**: send a photo to the chat, get carbs and XE back, saved to the same diary.
 
+> **XE (bread unit)** is the carb unit used with insulin therapy in Russia and Eastern Europe:
+> 1 XE ≈ 10–12 g of carbohydrates.
 
-## Как это выглядит
+## Screenshots
 
-### Фото еды
+The app interface is in Russian.
 
-Снимок тарелки — ИИ находит блюда и оценивает вес, углеводы и ХЕ считает код по справочнику.
+### Food photo
 
-<table>
-  <tr>
-    <td align="center" width="33%"><img src="assets/photo-1.png" width="240" alt="Распознавание фото"></td>
-    <td align="center" width="33%"><img src="assets/photo-2.png" width="240" alt="Варианты блюда"></td>
-    <td align="center" width="33%"><img src="assets/photo-3.png" width="240" alt="Итог приёма"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Снимок</b><br>шаги расчёта видны сразу</td>
-    <td align="center"><b>Что это за блюдо?</b><br>похожие варианты с БЖУ, выбор в одно касание</td>
-    <td align="center"><b>Итог</b><br>ХЕ, погрешность и кривая подъёма сахара</td>
-  </tr>
-</table>
-
-### Штрихкод
-
-Код читается с живого видео камеры. Товар из общей базы или каталога магазина — сразу с составом и фото пачки.
+A photo of the plate: AI finds the dishes and estimates their weight, code computes carbs and XE from nutrition tables.
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="assets/barcode-1.png" width="240" alt="Сканер штрихкода"></td>
-    <td align="center" width="33%"><img src="assets/barcode-2.png" width="240" alt="Товар найден"></td>
-    <td align="center" width="33%"><img src="assets/barcode-3.png" width="240" alt="Итог по пачке"></td>
+    <td align="center" width="33%"><img src="assets/photo-1.png" width="240" alt="Photo recognition"></td>
+    <td align="center" width="33%"><img src="assets/photo-2.png" width="240" alt="Dish options"></td>
+    <td align="center" width="33%"><img src="assets/photo-3.png" width="240" alt="Meal total"></td>
   </tr>
   <tr>
-    <td align="center"><b>Наведите камеру</b><br>без кнопки «снять»</td>
-    <td align="center"><b>Нашлось по штрихкоду</b><br>состав с упаковки, сверка с пачкой</td>
-    <td align="center"><b>Сколько съели</b><br>40 г — 1,1 ХЕ</td>
+    <td align="center"><b>Snapshot</b><br>calculation steps visible right away</td>
+    <td align="center"><b>Which dish is it?</b><br>similar options with macros, one tap to choose</td>
+    <td align="center"><b>Total</b><br>XE, error margin and expected glucose curve</td>
   </tr>
 </table>
 
-### Своё блюдо
+### Barcode
 
-Домашний рецепт: продукты вводятся сырыми, как клали в кастрюлю, выход блюда считается по коэффициентам или по весу кастрюли.
+The code is read from the live camera feed. The product comes from a shared database or a store catalogue, with its composition and a photo of the pack.
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="assets/dish-1.png" width="240" alt="Блюдо по рецепту"></td>
-    <td align="center" width="33%"><img src="assets/dish-2.png" width="240" alt="Карточка блюда"></td>
-    <td align="center" width="33%"><img src="assets/dish-3.png" width="240" alt="Избранное"></td>
+    <td align="center" width="33%"><img src="assets/barcode-1.png" width="240" alt="Barcode scanner"></td>
+    <td align="center" width="33%"><img src="assets/barcode-2.png" width="240" alt="Product found"></td>
+    <td align="center" width="33%"><img src="assets/barcode-3.png" width="240" alt="Pack total"></td>
   </tr>
   <tr>
-    <td align="center"><b>Рецепт</b><br>сырые продукты и выход блюда</td>
-    <td align="center"><b>Карточка</b><br>на 100 г и на всё блюдо, скорость подъёма сахара</td>
-    <td align="center"><b>Избранное</b><br>свои блюда — в одно касание</td>
+    <td align="center"><b>Point the camera</b><br>no shutter button</td>
+    <td align="center"><b>Found by barcode</b><br>composition from the pack, checked against the photo</td>
+    <td align="center"><b>How much was eaten</b><br>40 g = 1.1 XE</td>
   </tr>
 </table>
 
-## Ключевые решения
+### Own dish
 
-**LLM не считает углеводы.** Модель распознаёт только состав и массу компонентов.
-Углеводы и ХЕ считает код по справочникам питания (Скурихин–Тутельян, USDA, CoFID) в
-`Decimal`. Ошибка модели в массе видна и правится человеком; ошибка в «углеводах из
-головы модели» — нет.
+A home recipe: ingredients are entered raw, as they went into the pot, and the cooked yield is calculated from coefficients or from the weight of the pot.
 
-**Самый точный источник — первым.** Пачка — штрихкод и этикетка, своё блюдо — его
-сохранённый состав, обед в столовой — меню места. Оценка тарелки по фото — когда ничего
-из этого нет.
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="assets/dish-1.png" width="240" alt="Dish from a recipe"></td>
+    <td align="center" width="33%"><img src="assets/dish-2.png" width="240" alt="Dish card"></td>
+    <td align="center" width="33%"><img src="assets/dish-3.png" width="240" alt="Favourites"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Recipe</b><br>raw ingredients and cooked yield</td>
+    <td align="center"><b>Dish card</b><br>per 100 g and per dish, glucose rise speed</td>
+    <td align="center"><b>Favourites</b><br>your own dishes in one tap</td>
+  </tr>
+</table>
 
-**Дозу инсулина приложение не считает.** Было в первой версии, убрано осознанно: программа,
-которая считает дозу, в РФ — медицинское изделие с регистрацией в Росздравнадзоре.
+## Key decisions
 
-**Модель выбирается замером, а не по рейтингу.** До разработки собран «золотой набор» —
-русская еда со взвешенными компонентами по 10 категориям. Гейт фазы 0: медиана ошибки по
-углеводам < 15 г, иначе меняется подход, а не продукт. Модели сравнивались прогонами на
-этом наборе по точности углеводов, массы, задержке p95 и цене за 1000 фото.
+**The LLM does not count carbs.** The model only recognises components and their mass.
+Carbs and XE are computed by code from nutrition databases (Skurikhin–Tutelyan, USDA,
+CoFID) in `Decimal`. A mass error by the model is visible and the user can fix it; an error
+in "carbs from the model's head" is not.
 
-**Отказоустойчивость важнее цены.** Человек стоит над тарелкой — «сервис недоступен» здесь
-недопустим. Отсюда две цепочки фолбэка (ниже).
+**The most accurate source goes first.** A pack: barcode and label. Your own dish: its
+saved recipe. Lunch in a canteen: that place's menu. A photo estimate of the plate is used
+only when none of these is available.
 
-## Архитектура
+**The app does not calculate insulin doses.** It did in the first version and was removed on
+purpose: in Russia, software that calculates a dose is a medical device that requires
+registration with Roszdravnadzor, the national health regulator.
+
+**The model is chosen by measurement, not by leaderboard.** Before development, a "golden
+set" was collected: Russian food with weighed components across 10 categories. The phase 0
+gate was a median carb error below 15 g; otherwise the approach changes, not the product.
+Models were compared on this set by carb accuracy, mass accuracy, p95 latency and price per
+1,000 photos.
+
+**Fault tolerance beats price.** The user is standing over the plate, so "service
+unavailable" is not acceptable. Hence the two fallback chains below.
+
+## Architecture
 
 ```mermaid
 flowchart LR
-    U["Браузер / PWA"] --> T
-    TG["Telegram"] -- "вебхук" --> T
+    U["Browser / PWA"] --> T
+    TG["Telegram"] -- "webhook" --> T
     T["Traefik<br/>TLS, rate limit"]
     T --> F["frontend<br/>Next.js"]
     T -- "/api" --> B["backend<br/>FastAPI + aiogram"]
     B --> PG[("PostgreSQL 16")]
-    B -- "задачи" --> R[("Redis<br/>брокер + состояние провайдеров")]
+    B -- "tasks" --> R[("Redis<br/>broker + provider state")]
     R --> W["worker<br/>Celery + beat"]
-    R -- "очередь pdf" --> WP["worker-pdf<br/>WeasyPrint"]
+    R -- "pdf queue" --> WP["worker-pdf<br/>WeasyPrint"]
     W --> PG
 
-    subgraph LLM["Vision-провайдеры (OpenAI-совместимые)"]
-        P1["основной"]
-        P2["резерв 1"]
-        P3["резерв 2"]
+    subgraph LLM["Vision providers (OpenAI-compatible)"]
+        P1["primary"]
+        P2["backup 1"]
+        P3["backup 2"]
     end
     W -- "vision" --> P1
-    W -. "лёг" .-> P2
-    W -. "и он лёг" .-> P3
-    W -- "опрос датчика" --> LLU["LibreLinkUp"]
+    W -. "down" .-> P2
+    W -. "also down" .-> P3
+    W -- "sensor polling" --> LLU["LibreLinkUp"]
     NS["xDrip+ / Juggluco"] -- "Nightscout API" --> T
 ```
 
-### Две цепочки фолбэка
+### Two fallback chains
 
-Код: [`src/libra/vision/route.py`](src/libra/vision/route.py), [`src/libra/vision/client.py`](src/libra/vision/client.py),
-тесты: [`tests/test_fallback.py`](tests/test_fallback.py).
+Code: [`src/libra/vision/route.py`](src/libra/vision/route.py), [`src/libra/vision/client.py`](src/libra/vision/client.py),
+tests: [`tests/test_fallback.py`](tests/test_fallback.py).
 
-1. **Цепочка моделей по задаче.** У каждой задачи (тарелка, меню, этикетка, БЖУ блюда) своя
-   пара «основная + запасная». Первая не ответила, вернула невалидный JSON или не уложилась
-   в бюджет времени — запрос уходит второй. Бюджеты подобраны так, чтобы обе успели до
-   лимита задачи Celery.
-2. **Цепочка провайдеров.** Запрос идёт к первому живому провайдеру, у которого есть модель.
-   - Провайдер «лежит»: нет соединения, 502/503/504 от шлюза, 401, 402 после повторов.
-   - Модели «нет»: 404/422 или 400 с жалобой на имя — запрос сразу к следующему, пара
-     провайдер+модель пропускается 15 минут.
-   - Состояние общее для всех процессов (ключи в Redis), лежащий провайдер проверяется раз в
-     минуту настоящим мини-запросом и балансом счёта, а возвращается только после трёх минут
-     стабильных проб — иначе админа заваливает «упал / поднялся».
-   - Каждый переход — в лог и сообщением администраторам в Telegram.
+1. **Model chain per task.** Each task (plate, menu, label, dish macros) has its own
+   "primary + backup" pair. If the first model doesn't answer, returns invalid JSON or runs
+   over its time budget, the request goes to the second. The budgets are set so that both
+   fit within the Celery task limit.
+2. **Provider chain.** The request goes to the first live provider that has the model.
+   - A provider is "down": no connection, 502/503/504 from the gateway, 401, or 402 after retries.
+   - A model is "missing": 404/422, or a 400 complaining about the name. The request goes
+     straight to the next provider, and that provider + model pair is skipped for 15 minutes.
+   - The state is shared across all processes (keys in Redis). A provider that is down is
+     checked once a minute with a real mini-request and an account balance check, and it
+     comes back only after three minutes of stable probes. Otherwise the admin gets flooded
+     with "down / up" messages.
+   - Every switch is logged and sent to the admins in Telegram.
 
-Без Redis модуль работает на памяти процесса (тесты, локальный запуск).
+Without Redis the module runs on process memory (tests, local runs).
 
-### Цифры с прода (05–15.10.2026)
+### Production numbers (5–15 Oct 2026)
 
-| Показатель | Значение |
+| Metric | Value |
 |---|---|
-| Вызовов модели на один расчёт | 3,1 |
-| Стоимость LLM на один расчёт | ≈ 1,9 ₽ |
-| Успешных вызовов | 95,2 % (остальные ушли в резерв, незаметно для человека) |
+| Model calls per calculation | 3.1 |
+| LLM cost per calculation | ≈ RUB 1.9 (≈ $0.02) |
+| Successful calls | 95.2% (the rest went to a backup, invisibly to the user) |
 
-Каждый вызов модели пишется в журнал: задача, провайдер, исход, токены, стоимость, время.
+Every model call is logged: task, provider, outcome, tokens, cost, time.
 
-## Что ещё в коде здесь
+## Also in this repo
 
-- [`src/libra/ean.py`](src/libra/ean.py) — штрихкоды без базы: контрольная цифра, EAN-8/13,
-  UPC-A, GTIN-14, внутренние коды сетей с префиксом 2 (весовой товар узнаётся сверкой массы
-  из кода с наклейкой). Тесты — [`tests/test_ean.py`](tests/test_ean.py).
-- [`src/libra/sweets.py`](src/libra/sweets.py) — сладости в упаковке: углеводы на штуку
-  считает код по числам с этикетки, скорость подъёма сахара — типичная картина по жиру.
+- [`src/libra/ean.py`](src/libra/ean.py): barcodes without a database. Check digit, EAN-8/13,
+  UPC-A, GTIN-14, in-store codes with prefix 2 (a weighed item is recognised by matching the
+  mass in the code with the sticker). Tests: [`tests/test_ean.py`](tests/test_ean.py).
+- [`src/libra/sweets.py`](src/libra/sweets.py): packaged sweets. Code computes carbs per piece
+  from the numbers on the label; glucose rise speed follows the typical pattern by fat content.
 
-## Стек
+## Stack
 
-| Слой | Технологии |
+| Layer | Technologies |
 |---|---|
 | Backend | Python 3.13, FastAPI, Pydantic 2, SQLAlchemy 2 + Alembic, psycopg 3 |
-| Очередь | Celery + beat на Redis 7 |
-| Бот | aiogram 3, вебхук внутри FastAPI |
-| ИИ | Vision-LLM со структурированным выводом (JSON Schema, strict), цепочки моделей и провайдеров, промпты в файлах с версиями, бенчмарк на своём наборе |
-| Данные о еде | Справочники Скурихина–Тутельяна, USDA SR Legacy, CoFID; Nutrition5k для бенчмарка |
-| Глюкоза | LibreLinkUp, приём Nightscout API v1 |
-| PDF | WeasyPrint (внешние URL запрещены) |
+| Queue | Celery + beat on Redis 7 |
+| Bot | aiogram 3, webhook inside FastAPI |
+| AI | Vision LLMs with structured output (JSON Schema, strict), model and provider chains, versioned prompts in files, benchmark on our own set |
+| Food data | Skurikhin–Tutelyan tables, USDA SR Legacy, CoFID; Nutrition5k for benchmarking |
+| Glucose | LibreLinkUp, Nightscout API v1 ingestion |
+| PDF | WeasyPrint (external URLs blocked) |
 | Frontend | Next.js, React, TypeScript, Tailwind CSS, PWA, Telegram Mini App |
-| Инфраструктура | Docker Compose, Traefik v3, GitHub Actions (CI + gitleaks), non-root контейнеры, версии фиксируются после проверки CVE (OSV, trivy) |
-| Безопасность данных | Шифрование учётных данных датчика (Fernet), фото еды хранятся 14 дней, рантайм-роль БД без DDL |
+| Infrastructure | Docker Compose, Traefik v3, GitHub Actions (CI + gitleaks), non-root containers, versions pinned after CVE checks (OSV, trivy) |
+| Data security | Sensor credentials encrypted (Fernet), food photos kept for 14 days, runtime DB role without DDL |
 
+## Author
 
-## Автор
-
-Алексей Русских — [@Rubitco1](https://t.me/Rubitco1) · [libracalc.ru](https://libracalc.ru/?src=github). Продукт, архитектура, бэкенд, фронтенд,
-инфраструктура. Разработка с Claude Code.
+Aleksei Russkikh: [@Rubitco1](https://t.me/Rubitco1) · [libracalc.ru](https://libracalc.ru/?src=github). Product, architecture, backend, frontend,
+infrastructure. Built with Claude Code.
